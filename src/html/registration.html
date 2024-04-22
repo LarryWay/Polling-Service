@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+
+        <meta charset="UTF-8">
+        <title>Registration</title>
+
+        <script>
+
+
+            function fetchRegistrationInfo(){
+                var cat = "RegistrationQueue:email,";
+                cat += document.getElementById("email").value + ':password,';
+                cat += document.getElementById("password").value;
+                return cat;
+            }
+
+
+            function sendToServer(){
+                var xhr = new XMLHttpRequest();
+                var url = window.location.href;
+                xhr.open("POST", url);
+                xhr.setRequestHeader("Content-Type", "text/plain");
+
+
+                message = fetchRegistrationInfo();
+                console.log("Sent message \"" + message + "\"");
+                xhr.send(message);
+            }
+
+        </script>
+
+    </head>
+
+
+
+    <body>
+    
+        <h1>User Registration Page</h1>
+        <div>       
+            <input type="text" placeholder="Enter new email address" id="email">
+            <input type="password" placeholder="Enter new password" id="password">
+            <button id="button" onclick="sendToServer()">Submit</button>
+            <br>
+            <a href="login">Login</a>
+        </div>
+
+
+    </body>
+
+</html>

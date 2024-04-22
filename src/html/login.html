@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+
+        <meta charset="UTF-8">
+        <title>Login</title>
+
+        <script>
+
+            console.log(sessionStorage.getItem("username"))
+
+
+            function fetchLoginInfo(){
+                var cat = "LoginQueue,2:";
+                cat += document.getElementById("email").value + ':';
+                cat += document.getElementById("password").value;
+                return cat;
+            }
+
+
+            function directToHomepage(name, id){
+
+                url = "/home"
+                //params = "username=" + name + "&id=" + id;
+                sessionStorage.setItem("username", name);
+                document.location.href = url;
+
+            }
+
+
+            function sendToServer(){
+                var url = window.location.href + "/process-credentials"
+                var name = document.getElementById("email").value;
+                var pass = document.getElementById("password").value;
+                var params = "username=" + name + "&password=" + pass;
+
+                var state = fetch(url + "?" + params).then(function(response) {
+                    return response.text();
+                }).then(function(data) {
+                    console.log(data);
+                    var splitData = data.split(";")
+                    user = splitData[0];
+                    id = splitData[1];
+                    console.log(user)
+
+                    if(user == "fail"){
+                        document.getElementById("warning").style.visibility = "visible";
+                    }else if (user == "success") {
+                        directToHomepage(name, id);
+
+                    }
+
+                }).catch(function(err) {
+                    console.log('Fetch Error :-S', err);
+                });
+
+            }
+
+        </script>
+
+    </head>
+
+
+
+    <body>
+    
+        <h1>User Login Page</h1>
+        <div>       
+            <input type="text" placeholder="Enter email address" id="email">
+            <input type="password" placeholder="Enter password" id="password">
+            <button id="button" onclick="sendToServer()">Submit</button>
+            <br>
+            <a href="registration">Create new account</a>
+            <p style="color:red; visibility:hidden" id="warning">Error: Username or password wrong</p>
+            
+        </div>
+
+
+    </body>
+
+</html>

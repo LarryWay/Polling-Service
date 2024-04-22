@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+
+        <title>Home</title>
+
+        <script>
+
+
+            async function initializePollLinks(){
+                const response = await fetch(window.location.href + "/poll/request-available-polls?username=" + username);
+                var allPolls = (await response.text()).split(",");
+                var pollList = document.getElementById("poll_list")
+
+                for(var x = 0 ; x < allPolls.length ; x++){
+                    var link = document.createElement("a")
+                    link.href = window.location.href + "/polls?title=" + allPolls[x];
+                    link.innerText = allPolls[x]
+                    pollList.appendChild(link)
+                    pollList.appendChild(document.createElement("br"))
+                }
+
+            }
+
+
+            var username = sessionStorage.getItem("username")
+
+            // If there was no login process, then redirect to login page
+            if(username == null){
+                document.location.href = "/login"
+            }
+
+
+
+
+            (async () => {
+                await initializePollLinks();
+            })();
+
+
+
+
+
+
+
+            function refreshInfo(){
+                document.getElementById("title").innerText = "Welcome " + username
+            }
+
+
+
+
+        </script>
+
+
+
+    </head>
+
+
+
+
+    <body>
+
+        <h1 id="title" onload="refreshTitle()">{EMPTY MESSAGE}</h1>
+
+
+        <h2>Available Polls</h2>
+        <div id="poll_list"></div>
+
+
+        <script>refreshInfo()</script>
+
+    </body>
+
+</html>

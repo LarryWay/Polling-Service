@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+
+        <title>{{POLL_TITLE}}</title>
+
+        <script>
+            var username = sessionStorage.getItem("username")
+            var optionsCount = -1;
+
+            // If there was no login process, then redirect to login page
+            if(username == null){
+                document.location.href = "/home"
+            }
+
+
+
+
+
+            function createOptionButton(title){
+                var button = document.createElement("input");
+                button.type = "button";
+                button.value = title;
+                //button.onclick = sendPostRequest(title)
+                button.onclick(sendPostRequest(title));
+                document.getElementById("pollBody").appendChild(button);
+            }
+
+
+            function sendPostRequest(vote){
+                console.log("Vote being casted");
+
+                var xhr = new XMLHttpRequest();
+                var url = window.location.href;
+                xhr.open("POST", url);
+                xhr.setRequestHeader("Content-Type", "text/plain");
+
+
+                message = "PollSubmission:vote," + vote + ":user," + username + ":pollname," + "{{POLL_TITLE}}";
+                console.log("Sent message \"" + message + "\"");
+                xhr.send(message);
+            }
+
+
+            function refreshData(){
+                optionsCount = document.getElementById("pollBody").childElementCount;
+                console.log(optionsCount);
+            }
+
+
+
+
+        </script>
+
+    </head>
+
+
+
+    <body>
+
+        <div id="pollBody">
+
+            <h1>{{POLL_TITLE}}</h1>
+
+            {{HTML_CONTENT}}
+
+            <br>
+
+        </div>
+
+
+
+
+    </body>
+
+
+</html>
