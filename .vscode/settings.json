@@ -1,0 +1,11 @@
+{
+    "java.project.referencedLibraries": [
+        "lib/CSV.jar",
+        "lib/HttpWebserver.jar",
+    ],
+    "java.project.sourcePaths": [
+        "lib/Http-Webserver",
+        "lib/CSV",
+        "src"
+    ]
+}
