@@ -79,6 +79,52 @@ public class Poll {
         return nullPoll;
     }
 
+    
+    public String getDetailedResults(){
+
+        StringBuffer buff = new StringBuffer();
+        int votes = data.countRows();
+        buff.append(title).append(",").append(votes + 1).append(":");
+
+        String[][] allResults = data.getAllRows(Main.arr(CSV.Flags.ANY, CSV.Flags.ANY));
+
+        for(String[] row : allResults){
+            buff.append(row[0]).append(",").append(row[1]).append(":");
+        }
+
+        if(votes > 1){
+            buff.deleteCharAt(buff.length() - 1);
+        }
+
+
+        return buff.toString();
+
+
+    }
+
+
+    public String getNumberResults(){
+        
+        StringBuffer buffer = new StringBuffer();
+
+        int totalVotes = data.countRows();
+
+        buffer.append(title).append(",").append(options.size() + 1).append(":");
+        
+        
+        for(String op : options){
+            String[][] totalOptionVotes = data.getAllRows(Main.arr(CSV.Flags.ANY, op));
+            buffer.append(op).append(",").append(totalOptionVotes.length).append(":");
+        }
+
+        
+        buffer.deleteCharAt(buffer.length() - 1);
+
+
+        return buffer.toString();
+
+    }
+
 
 
 }

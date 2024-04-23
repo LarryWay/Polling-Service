@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+
+        <title>Analytics</title>
+
+
+
+
+    </head>
+
+
+
+
+    <body>
+
+        <h1>Analyltics</h1>
+
+
+        <div>
+            <canvas id="piechart" width="100px" height="100px"></canvas>
+        </div>
+
+        
+          
+
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+        <script>
+
+            
+            function stripUrlParams(url) {
+                let urlObj = new URL(url);
+                urlObj.search = '';
+                return urlObj.href;
+            }
+
+
+            function loadPieChart(stringData){
+
+                const chart = document.getElementById("piechart")
+                var chartLabels = 0;
+
+                var blocks = stringData.split(":")
+
+                var headerInfo = blocks[0].split(",")
+                var pollTitle = headerInfo[0]
+                var pollOptionsAmount = headerInfo[1] - 1;
+
+                var pieChartLabels = []
+                var pieChartValues = []
+
+                for(var x = 1 ; x < pollOptionsAmount + 1 ; x++){
+                    blockInfo = blocks[x].split(",")
+                    pieChartLabels.push(blockInfo[0])
+                    pieChartValues.push(Number(blockInfo[1]))
+
+                }
+
+
+
+
+                new Chart(chart, {
+                    type: 'pie',
+                    data: {
+                        labels: pieChartLabels,
+                        datasets: [{
+                            label: '# of Votes',
+                            data: pieChartValues,
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        plugins:{
+                            title:{
+                                display:true,
+                                text: (pollTitle + " Pie Chart") 
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+
+                });
+
+            }
+
+
+            function initializePollLinks(){
+                const queryString = window.location.search;
+                const urlParams = new URLSearchParams(queryString)
+                var pollId = urlParams.get("id");
+                var url = stripUrlParams(window.location.href) + "/request-data?id=" + pollId
+
+
+                const response = fetch(url).then(function(response){
+                    return response.text();
+                }).then(function(data){
+                    loadPieChart(data)
+                });
+                
+            }
+            initializePollLinks();
+
+
+
+
+
+
+        </script>      
+
+
+    </body>
+
+</html>

@@ -115,7 +115,7 @@ public class Main {
         // Where user should have poll configurability
 
         PollMaster pollMaster = new PollMaster();
-        Poll poll = new Poll("Presidents", Main.arr("Joe-Biden", "Donald-Trump"));
+        Poll poll = new Poll("Presidents", Main.arr("Joe-Bomba", "Mc-Donald"));
         Poll carsPoll = new Poll("Cars", Main.arr("New-Cars", "Old-Cars", "Used-Cars", "Vintage-Cars"));
 
         pollMaster.addPoll(poll);
@@ -131,24 +131,27 @@ public class Main {
 
         System.out.println("Starting server...");
 
-
-        HttpWebServer server = new HttpWebServer(8080);
+        int port = 8080;
+        HttpWebServer server = new HttpWebServer(port);
         DefaultHtmlWebpageDisplayContext dhwpc = new DefaultHtmlWebpageDisplayContext(server.createContext());
         LoginRequestContext lrc = new LoginRequestContext(server.createContext(), registrants);
         PollRequestContext prc =  new PollRequestContext(server.createContext(), pollMaster);
         GetPollPageContext gppc = new GetPollPageContext(server.createContext(), pollMaster);
+        GetAnalyticsContext gac = new GetAnalyticsContext(server.createContext(), pollMaster);
 
         
         server.addContext(dhwpc);
         server.addContext(lrc);
         server.addContext(prc);
         server.addContext(gppc);
+        server.addContext(gac);
 
         server.addDirectory("/registration", new File("src/html/registration.html"));
         server.addDirectory("/login", new File("src/html/login.html"));
         server.addDirectory("/homepagedata", new File("src/html/login.html"));
         server.addDirectory("/home", new File("src/html/home_template.html"));
         server.addDirectory("/", new File("src/html/index.html"));
+        server.addDirectory("/analytics", new File("src/html/analytics.html"));
 
         server.addPostContentBinder("/registration");
         server.addPostContentBinder("/login");
@@ -159,6 +162,14 @@ public class Main {
 
 
         System.out.println("Beginning main loop...");
+
+        
+
+        System.out.println("Different Analytics Links: ");
+        for(Poll p : pollMaster.getAllPolls()){
+            System.out.println("  - " + p.getTitle() + ": http://localhost:" + port + "/analytics?id=" + p.getTitle());
+        }
+
 
 
         InputStream in = server.getInputStream();
